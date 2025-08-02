@@ -1,0 +1,3 @@
+".\Objects\rcarm.obj" 
+TO ".\Objects\RCarm" 
+PRINT(".\Listings\RCarm.m51")

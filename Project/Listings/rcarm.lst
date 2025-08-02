@@ -1,0 +1,233 @@
+A51 MACRO ASSEMBLER  RCARM                                                                08/02/2025 19:07:34 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\rcarm.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE rcarm.asm SET(SMALL) DEBUG PRINT(.\Listings\rcarm.lst) OBJECT(.\Objects
+                      \rcarm.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000H
+                       2     
+0000                   3     MAIN:
+0000 759000            4         MOV P1, #00H        
+0003 75A000            5         MOV P2, #00H        
+0006 D2B0              6         SETB P3.0          
+0008 D2B1              7         SETB P3.1
+000A D2B2              8         SETB P3.2
+000C D2B3              9         SETB P3.3
+000E D2B4             10         SETB P3.4
+0010 D2B5             11         SETB P3.5
+0012 D2B6             12         SETB P3.6
+0014 D2B7             13         SETB P3.7
+0016                  14     MAIN_LOOP:
+0016 20B002           15         JB P3.0, NEXT1     
+0019 114A             16         ACALL STEP_CW
+001B                  17     NEXT1:
+001B 20B102           18         JB P3.1, NEXT2
+001E 1163             19         ACALL STEP_CCW
+0020                  20     NEXT2:
+0020 20B202           21         JB P3.2, NEXT3
+0023 117C             22         ACALL BASE_UP
+0025                  23     NEXT3:
+0025 20B302           24         JB P3.3, NEXT4
+0028 118E             25         ACALL ELBOW_UP
+002A                  26     NEXT4:
+002A 20B402           27         JB P3.4, NEXT5
+002D 11A0             28         ACALL WRIST_UP
+002F                  29     NEXT5:
+002F 20B502           30         JB P3.5, NEXT6
+0032 11A9             31         ACALL GRIP_CLOSE
+0034                  32     NEXT6:
+0034 20B602           33         JB P3.6, NEXT7
+0037 1185             34         ACALL BASE_DOWN
+0039                  35     NEXT7:
+0039 20B702           36         JB P3.7, NEXT8
+003C 1197             37         ACALL ELBOW_DOWN
+003E                  38     NEXT8:
+003E 208002           39             JB P0.0,NEXT9
+0041 11BB             40             ACALL WRIST_DOWN
+0043                  41     NEXT9:
+0043 208102           42             JB P0.1,ENDLOOP
+0046 11B2             43             ACALL GRIP_OPEN
+0048                  44     ENDLOOP:
+0048 80CC             45         SJMP MAIN_LOOP
+                      46     
+004A                  47     STEP_CW:
+004A 7409             48         MOV A, #09H
+004C F590             49         MOV P1, A
+004E 11DD             50         ACALL DELAY
+0050 7408             51         MOV A, #08H
+0052 F590             52         MOV P1, A
+0054 11DD             53         ACALL DELAY
+0056 740C             54         MOV A, #0CH
+0058 F590             55         MOV P1, A
+005A 11DD             56         ACALL DELAY
+005C 7404             57         MOV A, #04H
+A51 MACRO ASSEMBLER  RCARM                                                                08/02/2025 19:07:34 PAGE     2
+
+005E F590             58         MOV P1, A
+0060 11DD             59         ACALL DELAY
+0062 22               60         RET
+                      61     
+0063                  62     STEP_CCW:
+0063 7404             63         MOV A, #04H
+0065 F590             64         MOV P1, A
+0067 11DD             65         ACALL DELAY
+0069 740C             66         MOV A, #0CH
+006B F590             67         MOV P1, A
+006D 11DD             68         ACALL DELAY
+006F 7408             69         MOV A, #08H
+0071 F590             70         MOV P1, A
+0073 11DD             71         ACALL DELAY
+0075 7409             72         MOV A, #09H
+0077 F590             73         MOV P1, A
+0079 11DD             74         ACALL DELAY
+007B 22               75         RET
+                      76     
+                      77     ; ------------------------
+                      78     ; Servo Control Pulses
+                      79     ; ------------------------
+007C                  80     BASE_UP:
+007C D2A0             81         SETB P2.0
+007E 11C4             82         ACALL SHORT_PULSE
+0080 C2A0             83         CLR P2.0
+0082 11D6             84         ACALL SERVO_DELAY
+0084 22               85         RET
+                      86     
+0085                  87     BASE_DOWN:
+0085 D2A0             88         SETB P2.0
+0087 11CD             89         ACALL LONG_PULSE
+0089 C2A0             90         CLR P2.0
+008B 11D6             91         ACALL SERVO_DELAY
+008D 22               92         RET
+                      93     
+008E                  94     ELBOW_UP:
+008E D2A1             95         SETB P2.1
+0090 11C4             96         ACALL SHORT_PULSE
+0092 C2A1             97         CLR P2.1
+0094 11D6             98         ACALL SERVO_DELAY
+0096 22               99         RET
+                     100     
+0097                 101     ELBOW_DOWN:
+0097 D2A1            102         SETB P2.1
+0099 11CD            103         ACALL LONG_PULSE
+009B C2A1            104         CLR P2.1
+009D 11D6            105         ACALL SERVO_DELAY
+009F 22              106         RET
+                     107     
+00A0                 108     WRIST_UP:
+00A0 D2A2            109         SETB P2.2
+00A2 11C4            110         ACALL SHORT_PULSE
+00A4 C2A2            111         CLR P2.2
+00A6 11D6            112         ACALL SERVO_DELAY
+00A8 22              113         RET
+                     114     
+00A9                 115     GRIP_CLOSE:
+00A9 D2A3            116         SETB P2.3
+00AB 11C4            117         ACALL SHORT_PULSE
+00AD C2A3            118         CLR P2.3
+00AF 11D6            119         ACALL SERVO_DELAY
+00B1 22              120         RET
+00B2                 121     GRIP_OPEN:
+00B2 D2A3            122             SETB P2.3
+00B4 11CD            123             ACALL LONG_PULSE
+A51 MACRO ASSEMBLER  RCARM                                                                08/02/2025 19:07:34 PAGE     3
+
+00B6 C2A3            124             CLR P2.3
+00B8 11D6            125             ACALL SERVO_DELAY
+00BA 22              126             RET
+00BB                 127     WRIST_DOWN:
+00BB D2A2            128             SETB P2.2
+00BD 11CD            129             ACALL LONG_PULSE
+00BF C2A2            130             CLR P2.2
+00C1 11D6            131             ACALL SERVO_DELAY
+00C3 22              132             RET
+                     133     ; ------------------------
+                     134     ; Pulse Generation (~1ms)
+                     135     ; ------------------------
+00C4                 136     SHORT_PULSE:
+00C4 7A64            137         MOV R2, #100
+00C6 79FA            138     L1: MOV R1, #250
+00C8 D9FE            139     L2: DJNZ R1, L2
+00CA DAFA            140         DJNZ R2, L1
+00CC 22              141         RET
+                     142     
+                     143     ; Longer Pulse (~2ms)
+00CD                 144     LONG_PULSE:
+00CD 7AC8            145         MOV R2, #200
+00CF 79FA            146     L3: MOV R1, #250
+00D1 D9FE            147     L4: DJNZ R1, L4
+00D3 DAFA            148         DJNZ R2, L3
+00D5 22              149         RET
+                     150     
+                     151     ; Delay Between Pulses (~18ms)
+00D6                 152     SERVO_DELAY:
+00D6 7B12            153         MOV R3, #18
+00D8 11C4            154     D1: ACALL SHORT_PULSE
+00DA DBFC            155         DJNZ R3, D1
+00DC 22              156         RET
+                     157     
+                     158     ; ------------------------
+                     159     ; Generic Delay (for stepper)
+                     160     ; ------------------------
+00DD                 161     DELAY:
+00DD 7A32            162         MOV R2, #50
+00DF 79FF            163     D2: MOV R1, #255
+00E1 D9FE            164     D3: DJNZ R1, D3
+00E3 DAFA            165         DJNZ R2, D2
+00E5 22              166         RET
+                     167     
+                     168     END
+A51 MACRO ASSEMBLER  RCARM                                                                08/02/2025 19:07:34 PAGE     4
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+BASE_DOWN. . . . .  C ADDR   0085H   A   
+BASE_UP. . . . . .  C ADDR   007CH   A   
+D1 . . . . . . . .  C ADDR   00D8H   A   
+D2 . . . . . . . .  C ADDR   00DFH   A   
+D3 . . . . . . . .  C ADDR   00E1H   A   
+DELAY. . . . . . .  C ADDR   00DDH   A   
+ELBOW_DOWN . . . .  C ADDR   0097H   A   
+ELBOW_UP . . . . .  C ADDR   008EH   A   
+ENDLOOP. . . . . .  C ADDR   0048H   A   
+GRIP_CLOSE . . . .  C ADDR   00A9H   A   
+GRIP_OPEN. . . . .  C ADDR   00B2H   A   
+L1 . . . . . . . .  C ADDR   00C6H   A   
+L2 . . . . . . . .  C ADDR   00C8H   A   
+L3 . . . . . . . .  C ADDR   00CFH   A   
+L4 . . . . . . . .  C ADDR   00D1H   A   
+LONG_PULSE . . . .  C ADDR   00CDH   A   
+MAIN . . . . . . .  C ADDR   0000H   A   
+MAIN_LOOP. . . . .  C ADDR   0016H   A   
+NEXT1. . . . . . .  C ADDR   001BH   A   
+NEXT2. . . . . . .  C ADDR   0020H   A   
+NEXT3. . . . . . .  C ADDR   0025H   A   
+NEXT4. . . . . . .  C ADDR   002AH   A   
+NEXT5. . . . . . .  C ADDR   002FH   A   
+NEXT6. . . . . . .  C ADDR   0034H   A   
+NEXT7. . . . . . .  C ADDR   0039H   A   
+NEXT8. . . . . . .  C ADDR   003EH   A   
+NEXT9. . . . . . .  C ADDR   0043H   A   
+P0 . . . . . . . .  D ADDR   0080H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+P3 . . . . . . . .  D ADDR   00B0H   A   
+SERVO_DELAY. . . .  C ADDR   00D6H   A   
+SHORT_PULSE. . . .  C ADDR   00C4H   A   
+STEP_CCW . . . . .  C ADDR   0063H   A   
+STEP_CW. . . . . .  C ADDR   004AH   A   
+WRIST_DOWN . . . .  C ADDR   00BBH   A   
+WRIST_UP . . . . .  C ADDR   00A0H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
